@@ -441,9 +441,9 @@
             if (code >= 1 && code <= 3) return { condition: 'partly-cloudy', label: 'Partly Cloudy' };
             if (code >= 45 && code <= 48) return { condition: 'cloudy', label: 'Foggy' };
             if (code >= 51 && code <= 67) return { condition: 'rain', label: 'Rainy' };
-            if (code >= 71 && code <= 77) return { condition: 'cloudy', label: 'Snowy' };
+            if (code >= 71 && code <= 77) return { condition: 'snow', label: 'Snowy' };
             if (code >= 80 && code <= 82) return { condition: 'rain', label: 'Showers' };
-            if (code >= 95 && code <= 99) return { condition: 'rain', label: 'Thunderstorm' };
+            if (code >= 95 && code <= 99) return { condition: 'thunderstorm', label: 'Thunderstorm' };
             return { condition: 'cloudy', label: 'Cloudy' };
         };
 
@@ -465,14 +465,14 @@
                     return (
                         <div className={`relative ${sizeClasses} flex items-center justify-center text-gray-400`}>
                             <div className="absolute animate-float" style={{ animationDuration: '8s' }}>☁️</div>
-                            <div className="absolute animate-float opacity-70 transform translate-x-4 translate-y-2" style={{ animationDuration: '6s', animationDelay: '1s' }}>☁️</div>
+                            <div className="absolute animate-float opacity-70 top-2 -right-2" style={{ animationDuration: '6s', animationDelay: '1s' }}>☁️</div>
                         </div>
                     );
                 case 'partly-cloudy':
                     return (
                         <div className={`relative ${sizeClasses} flex items-center justify-center`}>
                             <div className="absolute animate-spin-slow text-yellow-400 opacity-80" style={{ fontSize: '0.8em' }}>☀️</div>
-                            <div className="absolute animate-float text-white/90 transform translate-x-4">☁️</div>
+                            <div className="absolute animate-float text-white/90 top-1 -right-2">☁️</div>
                         </div>
                     );
                 case 'snow':
