@@ -6,7 +6,7 @@ import Slide from './components/Slide';
 import WeatherView from './components/WeatherView';
 import AdminPanel from './components/AdminPanel';
 
-const STORAGE_KEY = 'restaurant_slides_v1';
+const STORAGE_KEY = 'restaurant_slides_v2';
 
 const App: React.FC = () => {
   const [slides, setSlides] = useState<SlideData[]>([]);
