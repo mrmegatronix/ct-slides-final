@@ -95,7 +95,7 @@ export const INITIAL_SLIDES: SlideData[] = [
     id: '10',
     day: 'Membership',
     title: 'Loyalty App',
-    description: 'Join our loyalty program! Earn points with every purchase and redeem them for food and drinks.',
+    description: 'Join our loyalty program! Earn points with every purchase and redeem them for food and drinks. Look for us in your phones app store!',
     price: 'FREE!',
     imageUrl: 'images/platter.jpg',
     highlightColor: '#8b5cf6',
