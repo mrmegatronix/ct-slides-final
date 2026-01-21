@@ -7,7 +7,7 @@ export const INITIAL_SLIDES: SlideData[] = [
     title: '',
     description: '',
     price: '',
-    imageUrl: 'images/final-logo.png',
+    imageUrl: 'images/GOLD-FLAME-LOGO-BLACK.png',
     highlightColor: '#d4af37',
     type: 'promo'
   },
