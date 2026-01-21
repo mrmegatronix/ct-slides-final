@@ -32,14 +32,7 @@ const App: React.FC = () => {
   }, []);
 
   const playlist = useMemo(() => {
-    const weatherSlide: SlideData = {
-      id: 'weather-special',
-      type: 'weather',
-      title: 'Weather',
-      description: '',
-      imageUrl: ''
-    };
-    return [...slides, weatherSlide];
+    return slides;
   }, [slides]);
 
   const currentSlide = playlist[currentIndex] || playlist[0];
@@ -96,7 +89,7 @@ const App: React.FC = () => {
       </div>
 
       <div className="absolute bottom-0 left-0 w-full h-3 bg-black/40 z-40 backdrop-blur-sm">
-        <div 
+        <div
           className="h-full bg-gradient-to-r from-amber-600 to-yellow-400 transition-all duration-100 ease-linear"
           style={{ width: `${progress}%` }}
         />
@@ -104,30 +97,30 @@ const App: React.FC = () => {
 
       {/* Persistent Controls Area - Hidden until group-hover */}
       <div className="absolute top-8 right-8 z-50 flex items-center gap-3 p-3 rounded-2xl bg-black/60 backdrop-blur-xl border border-white/10 shadow-2xl opacity-0 translate-y-[-10px] group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-        <button 
-          onClick={prevSlide} 
+        <button
+          onClick={prevSlide}
           className="p-3 bg-white/5 hover:bg-amber-600 rounded-xl text-white transition-all active:scale-95"
           title="Previous Slide"
         >
           <SkipBack className="w-6 h-6" />
         </button>
-        
-        <button 
+
+        <button
           onClick={() => {
             const nextIsPlaying = !isPlaying;
             setIsPlaying(nextIsPlaying);
             if (nextIsPlaying) {
               startTimeRef.current = Date.now() - (progress / 100) * SLIDE_DURATION_MS;
             }
-          }} 
+          }}
           className="p-3 bg-white/5 hover:bg-amber-600 rounded-xl text-white transition-all active:scale-95"
           title={isPlaying ? "Pause" : "Resume"}
         >
           {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
         </button>
-        
-        <button 
-          onClick={nextSlide} 
+
+        <button
+          onClick={nextSlide}
           className="p-3 bg-white/5 hover:bg-amber-600 rounded-xl text-white transition-all active:scale-95"
           title="Next Slide"
         >
@@ -136,7 +129,7 @@ const App: React.FC = () => {
 
         <div className="w-px h-8 bg-white/10 mx-1"></div>
 
-        <button 
+        <button
           onClick={() => setIsAdminOpen(true)}
           className="p-3 bg-white/5 hover:bg-blue-600 rounded-xl text-white transition-all active:scale-95"
           title="Open Admin Overview"
@@ -146,10 +139,10 @@ const App: React.FC = () => {
       </div>
 
       {isAdminOpen && (
-        <AdminPanel 
-          slides={slides} 
-          onSave={handleAdminSave} 
-          onClose={() => setIsAdminOpen(false)} 
+        <AdminPanel
+          slides={slides}
+          onSave={handleAdminSave}
+          onClose={() => setIsAdminOpen(false)}
         />
       )}
     </div>

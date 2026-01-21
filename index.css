@@ -1,0 +1,43 @@
+body {
+    background-color: #000;
+    margin: 0;
+    overflow: hidden;
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-down {
+    animation: slide-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in-up {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 1s ease-out forwards;
+}
+
+/* Global fonts connection matching the Tailwind/Google Fonts setup */
+body {
+    font-family: 'Inter', sans-serif;
+}
+h1, h2, h3, .serif {
+    font-family: 'Playfair Display', serif;
+}
