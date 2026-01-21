@@ -27,7 +27,7 @@ export const INITIAL_SLIDES: SlideData[] = [
     title: 'Chase the Ace',
     description: 'Tickets from 3.00pm. Simply purchase a beverage between 3.00pm and 5.30pm and you\'re in the draw.',
     price: '5.30pm',
-    imageUrl: 'images/bg2.jpg',
+    imageUrl: 'images/chase-the-ace.jpg',
     highlightColor: '#ef4444',
     type: 'promo'
   },
@@ -67,7 +67,7 @@ export const INITIAL_SLIDES: SlideData[] = [
     title: 'Chase the Ace',
     description: 'Tickets from 3.00pm. Simply purchase a beverage between 3.00pm and 6.30pm and you\'re in the draw.',
     price: '6.30pm',
-    imageUrl: 'images/platter.jpg',
+    imageUrl: 'images/chase-the-ace.jpg',
     highlightColor: '#06b6d4',
     type: 'promo'
   },
