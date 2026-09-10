@@ -38,6 +38,17 @@ const App: React.FC = () => {
   const currentSlide = playlist[currentIndex] || playlist[0];
   const startTimeRef = useRef<number>(Date.now());
 
+  const [isLocked, setIsLocked] = useState(false);
+  const [slideDuration, setSlideDuration] = useState(SLIDE_DURATION_MS);
+  const [hudMessage, setHudMessage] = useState<string | null>(null);
+  const hudTimeoutRef = useRef<number | null>(null);
+
+  const showHud = useCallback((text: string) => {
+    setHudMessage(text);
+    if (hudTimeoutRef.current) window.clearTimeout(hudTimeoutRef.current);
+    hudTimeoutRef.current = window.setTimeout(() => setHudMessage(null), 1600);
+  }, []);
+
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % playlist.length);
     setProgress(0);
@@ -51,12 +62,12 @@ const App: React.FC = () => {
   }, [playlist.length]);
 
   useEffect(() => {
-    if (!isPlaying || isAdminOpen) return;
+    if (!isPlaying || isAdminOpen || isLocked) return;
 
     const interval = setInterval(() => {
       const now = Date.now();
       const elapsed = now - startTimeRef.current;
-      const newProgress = (elapsed / SLIDE_DURATION_MS) * 100;
+      const newProgress = (elapsed / slideDuration) * 100;
 
       if (newProgress >= 100) {
         nextSlide();
@@ -66,7 +77,84 @@ const App: React.FC = () => {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [isPlaying, isAdminOpen, nextSlide]);
+  }, [isPlaying, isAdminOpen, isLocked, slideDuration, nextSlide]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || (document.activeElement as HTMLElement)?.isContentEditable) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+        showHud('Prev Slide');
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        nextSlide();
+        showHud('Next Slide');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setCurrentIndex(0);
+        setProgress(0);
+        startTimeRef.current = Date.now();
+        showHud('Restart Module');
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+        }
+        showHud('Next Module');
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        setIsPlaying(prev => {
+          const next = !prev;
+          if (next) startTimeRef.current = Date.now() - (progress / 100) * slideDuration;
+          showHud(next ? 'Playing' : 'Paused');
+          return next;
+        });
+      } else if (e.key === 'a' || e.key === 'A') {
+        e.preventDefault();
+        setIsAdminOpen(prev => !prev);
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        window.open('remote.html', '_blank');
+      } else if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const secs = parseInt(e.key, 10) * 10;
+        setSlideDuration(secs * 1000);
+        setProgress(0);
+        startTimeRef.current = Date.now();
+        showHud(`Speed: ${secs}s`);
+      } else if (e.key === '0') {
+        e.preventDefault();
+        setIsLocked(prev => {
+          const next = !prev;
+          showHud(next ? 'Slide Locked' : 'Slide Unlocked');
+          return next;
+        });
+      }
+    };
+
+    const handleMessage = (e: MessageEvent) => {
+      if (!e.data) return;
+      if (e.data.type === 'SKIP_MODULE') {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+        }
+      } else if (e.data.type === 'GOTO_FIRST') {
+        setCurrentIndex(0);
+        setProgress(0);
+        startTimeRef.current = Date.now();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [nextSlide, prevSlide, progress, slideDuration, showHud]);
 
   const handleAdminSave = (newSlides: SlideData[]) => {
     setSlides([...newSlides]); // Force new reference
@@ -144,6 +232,12 @@ const App: React.FC = () => {
           onSave={handleAdminSave}
           onClose={() => setIsAdminOpen(false)}
         />
+      )}
+
+      {hudMessage && (
+        <div className="fixed bottom-6 right-6 z-[99999] bg-black/85 text-white border border-white/25 px-4 py-2 rounded-xl text-sm font-semibold shadow-2xl tracking-wide pointer-events-none transition-opacity duration-200">
+          {hudMessage}
+        </div>
       )}
     </div>
   );
